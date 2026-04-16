@@ -18,11 +18,11 @@ def print_dependency_status() -> bool:
     print("\nLOADING STATUS: Loading programs...\n")
     print("Checking dependencies:")
 
-    missing: list[str] = []
+    missing: bool = False
     for dist_name, purpose in REQUIRED_PACKAGES.items():
         ver = _get_version(dist_name)
         if ver is None:
-            missing.append(dist_name)
+            missing = True
             print(f"[MISSING] {dist_name} - {purpose} not available")
         else:
             print(f"[OK] {dist_name} ({ver}) - {purpose} ready")
@@ -40,43 +40,30 @@ def print_dependency_status() -> bool:
 
 
 def analyze_and_plot() -> None:
-    import matplotlib
     import numpy as np
     import pandas as pd
-
-    matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
     print("\nAnalyzing Matrix data...")
 
-    points = 1000
-    print(f"Processing {points} data points...")
+    month = 30
+    print(f"Processing {month} data points...")
+    meals = np.random.randint(low=2, high=8, size=month)
 
-    rng = np.random.default_rng(42)
-    tick = np.arange(points)
-    base = 50.0 + 10.0 * np.sin(tick / 40.0)
-    noise = rng.normal(loc=0.0, scale=2.0, size=points)
-    signal = base + noise
-
-    spike_idx = rng.choice(points, size=10, replace=False)
-    signal[spike_idx] += rng.normal(loc=20.0, scale=5.0, size=10)
-
-    df = pd.DataFrame({"tick": tick, "signal": signal})
-    df["rolling_mean"] = df["signal"].rolling(window=50, min_periods=1).mean()
-
+    df = pd.Series({"meals": meals})
+    print(df)
     print("Generating visualization...\n")
 
-    fig, ax = plt.subplots(figsize=(10, 4))
-    ax.plot(df["tick"], df["signal"], alpha=0.35, linewidth=1, label="raw signal")
-    ax.plot(df["tick"], df["rolling_mean"], linewidth=2, label="rolling mean (50)")
+    fig, ax = plt.subplots(figsize=(15, 10))
 
-    ax.set_title("Simulated Matrix signal (1000 points)")
-    ax.set_xlabel("tick")
-    ax.set_ylabel("signal")
+    ax.plot(df["meals"], linewidth=2, label="meal")
+    ax.set_title("how many time did i eat this month !")
+    ax.set_ylabel("meals")
+    ax.set_xlabel("days")
     ax.legend(loc="upper right")
 
     fig.tight_layout()
-    fig.savefig("matrix_analysis.png", dpi=150)
+    fig.savefig("matrix_analysis.png", dpi=600)
     plt.close(fig)
 
     print("Analysis complete!")

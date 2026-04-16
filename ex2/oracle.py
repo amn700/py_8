@@ -72,8 +72,8 @@ def _describe_zion(endpoint: str | None) -> str:
 
 
 def main() -> None:
-    print("Accessing the Mainframe")
-    print("ORACLE STATUS: Reading the Matrix...")
+
+    print("\nORACLE STATUS: Reading the Matrix...\n")
 
     script_dir = _script_dir()
     dotenv_path = os.path.join(script_dir, ".env")
@@ -81,6 +81,7 @@ def main() -> None:
     dotenv_loaded = load_dotenv(dotenv_path=dotenv_path, override=False)
 
     raw_mode = os.environ.get("MATRIX_MODE")
+
     mode = _normalize_mode(raw_mode)
 
     warnings: list[str] = []
@@ -134,7 +135,7 @@ def main() -> None:
         for w in warnings:
             print(f"- {w}")
 
-    print("Environment security check:")
+    print("\nEnvironment security check:")
     print("[OK] No hardcoded secrets detected")
 
     gitignore_path = os.path.join(script_dir, ".gitignore")
@@ -160,7 +161,7 @@ def main() -> None:
     if _is_truthy(api_key) and api_key.strip().lower() in ("change-me", "changeme", "replace-me", "replace_me"):
         print("[WARN] API_KEY looks like a placeholder (set a real value)")
 
-    print("The Oracle sees all configurations.")
+    print("\nThe Oracle sees all configurations.")
 
 
 if __name__ == "__main__":
